@@ -1,4 +1,4 @@
-SDX-REST
-========
+sdx-rest-gson
+=============
 
-**Simple REST framework based on Jetty.**
+**Gson support for sdx-rest.**
