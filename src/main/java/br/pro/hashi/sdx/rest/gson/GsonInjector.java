@@ -13,23 +13,47 @@ import br.pro.hashi.sdx.rest.gson.transform.GsonDeserializer;
 import br.pro.hashi.sdx.rest.gson.transform.GsonSerializer;
 import br.pro.hashi.sdx.rest.transform.extension.Injector;
 
+/**
+ * Stub.
+ */
 public class GsonInjector extends Injector {
 	private static final String JSON_TYPE = "application/json";
 
 	private final Logger logger;
 
+	/**
+	 * Stub.
+	 */
 	public GsonInjector() {
 		this.logger = LoggerFactory.getLogger(GsonInjector.class);
 	}
 
+	/**
+	 * Stub.
+	 * 
+	 * @param builder stub
+	 */
 	public void inject(Builder<?> builder) {
 		inject(builder, newGsonBuilder());
 	}
 
+	/**
+	 * Stub.
+	 * 
+	 * @param builder     stub
+	 * @param packageName stub
+	 */
 	public void inject(Builder<?> builder, String packageName) {
 		inject(builder, newGsonBuilder(), packageName);
 	}
 
+	/**
+	 * Stub.
+	 * 
+	 * @param builder     stub
+	 * @param gsonBuilder stub
+	 * @param packageName stub
+	 */
 	public void inject(Builder<?> builder, GsonBuilder gsonBuilder, String packageName) {
 		for (GsonConverter<?, ?> converter : getSubConverters(packageName, GsonConverter.class)) {
 			Type type = converter.getSourceType();
@@ -40,6 +64,12 @@ public class GsonInjector extends Injector {
 		inject(builder, gsonBuilder);
 	}
 
+	/**
+	 * Stub.
+	 * 
+	 * @param builder     stub
+	 * @param gsonBuilder stub
+	 */
 	public void inject(Builder<?> builder, GsonBuilder gsonBuilder) {
 		Gson gson = gsonBuilder.create();
 		builder.withSerializer(JSON_TYPE, new GsonSerializer(gson));
