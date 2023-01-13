@@ -12,12 +12,12 @@ import br.pro.hashi.sdx.rest.transform.Serializer;
 import br.pro.hashi.sdx.rest.transform.extension.Plumber;
 
 public class GsonSerializer implements Serializer {
-	private final Gson gson;
 	private final Plumber plumber;
+	private final Gson gson;
 
 	public GsonSerializer(Gson gson) {
-		this.gson = gson;
 		this.plumber = new Plumber();
+		this.gson = gson;
 	}
 
 	@Override
