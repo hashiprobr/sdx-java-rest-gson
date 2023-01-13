@@ -11,17 +11,24 @@ import com.google.gson.JsonSerializer;
 import br.pro.hashi.sdx.rest.transform.extension.Converter;
 
 /**
- * Stub.
+ * <p>
+ * A Gson converter can convert objects of a source type to and from objects of
+ * a target type.
+ * </p>
+ * <p>
+ * The idea is that the source type is not supported by Gson, but the target
+ * type is (possibly via another converter).
+ * </p>
  * 
- * @param <S> stub
- * @param <T> stub
+ * @param <S> the source type
+ * @param <T> the target type
  */
 public abstract class GsonConverter<S, T> extends Converter<S, T> {
 	private final JsonSerializer<S> serializer;
 	private final JsonDeserializer<S> deserializer;
 
 	/**
-	 * Stub.
+	 * Constructs a new Gson converter.
 	 */
 	protected GsonConverter() {
 		this.serializer = new JsonSerializer<>() {
@@ -39,18 +46,18 @@ public abstract class GsonConverter<S, T> extends Converter<S, T> {
 	}
 
 	/**
-	 * Stub.
+	 * Obtains a {@link JsonSerializer<T>} based on this converter.
 	 * 
-	 * @return stub
+	 * @return the Gson serializer
 	 */
 	public final JsonSerializer<S> getSerializer() {
 		return serializer;
 	}
 
 	/**
-	 * Stub.
+	 * Obtains a {@link JsonDeserializer<T>} based on this converter.
 	 * 
-	 * @return stub
+	 * @return the Gson deserializer
 	 */
 	public final JsonDeserializer<S> getDeserializer() {
 		return deserializer;

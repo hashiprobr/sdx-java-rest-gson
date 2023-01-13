@@ -9,12 +9,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import br.pro.hashi.sdx.rest.Builder;
+import br.pro.hashi.sdx.rest.client.RestClientBuilder;
 import br.pro.hashi.sdx.rest.gson.transform.GsonDeserializer;
 import br.pro.hashi.sdx.rest.gson.transform.GsonSerializer;
+import br.pro.hashi.sdx.rest.server.RestServerBuilder;
 import br.pro.hashi.sdx.rest.transform.extension.Injector;
 
 /**
- * Stub.
+ * A Gson injector can inject a Gson-based serializer and a Gson-based
+ * deserializer in an object of type {@link RestClientBuilder} or an object of
+ * type {@link RestServerBuilder}.
  */
 public class GsonInjector extends Injector {
 	private static final String JSON_TYPE = "application/json";
@@ -22,37 +26,67 @@ public class GsonInjector extends Injector {
 	private final Logger logger;
 
 	/**
-	 * Stub.
+	 * Constructs a new Gson injector.
 	 */
 	public GsonInjector() {
 		this.logger = LoggerFactory.getLogger(GsonInjector.class);
 	}
 
 	/**
-	 * Stub.
+	 * <p>
+	 * Injects a default serializer and a default deserializer in a client or server
+	 * builder.
+	 * </p>
+	 * <p>
+	 * This method instantiates a {@link Gson} with a default configuration. Namely,
+	 * with the options below.
+	 * </p>
 	 * 
-	 * @param builder stub
+	 * <pre>
+	 * {@code   .disableJdkUnsafe()
+	 *   .disableHtmlEscaping()
+	 *   .serializeNulls()
+	 *   .setPrettyPrinting()}
+	 * </pre>
+	 * 
+	 * @param builder the client or server builder
 	 */
 	public void inject(Builder<?> builder) {
 		inject(builder, newGsonBuilder());
 	}
 
 	/**
-	 * Stub.
+	 * <p>
+	 * Injects an extended default serializer and an extended default deserializer
+	 * in a client or server builder.
+	 * </p>
+	 * <p>
+	 * This method instantiates a {@link Gson} with a default configuration (see
+	 * {@code inject(Builder<?>)}) and extends its type support with instances of
+	 * all concrete subclasses of {@link GsonConverter} in a specified package.
+	 * </p>
 	 * 
-	 * @param builder     stub
-	 * @param packageName stub
+	 * @param builder     the client or server builder
+	 * @param packageName the package name
 	 */
 	public void inject(Builder<?> builder, String packageName) {
 		inject(builder, newGsonBuilder(), packageName);
 	}
 
 	/**
-	 * Stub.
+	 * <p>
+	 * Injects an extended custom serializer and an extended custom deserializer in
+	 * a client or server builder.
+	 * </p>
+	 * <p>
+	 * This method uses a specified {@link GsonBuilder} to instantiate a
+	 * {@link Gson} and extends its type support with instances of all concrete
+	 * subclasses of {@link GsonConverter} in a specified package.
+	 * </p>
 	 * 
-	 * @param builder     stub
-	 * @param gsonBuilder stub
-	 * @param packageName stub
+	 * @param builder     the client or server builder
+	 * @param gsonBuilder the Gson builder
+	 * @param packageName the package name
 	 */
 	public void inject(Builder<?> builder, GsonBuilder gsonBuilder, String packageName) {
 		for (GsonConverter<?, ?> converter : getSubConverters(packageName, GsonConverter.class)) {
@@ -65,10 +99,17 @@ public class GsonInjector extends Injector {
 	}
 
 	/**
-	 * Stub.
+	 * <p>
+	 * Injects a custom serializer and a custom deserializer in a client or server
+	 * builder.
+	 * </p>
+	 * <p>
+	 * This method uses a specified {@link GsonBuilder} to instantiate a
+	 * {@link Gson}.
+	 * </p>
 	 * 
-	 * @param builder     stub
-	 * @param gsonBuilder stub
+	 * @param builder     the client or server builder
+	 * @param gsonBuilder the Gson builder
 	 */
 	public void inject(Builder<?> builder, GsonBuilder gsonBuilder) {
 		Gson gson = gsonBuilder.create();
