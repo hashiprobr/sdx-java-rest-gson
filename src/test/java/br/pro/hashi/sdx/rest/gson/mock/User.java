@@ -3,6 +3,7 @@ package br.pro.hashi.sdx.rest.gson.mock;
 public class User {
 	private String name;
 	private Address address;
+	private Email email;
 	private boolean active;
 
 	public String getName() {
@@ -19,6 +20,14 @@ public class User {
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	public Email getEmail() {
+		return email;
+	}
+
+	public void setEmail(Email email) {
+		this.email = email;
 	}
 
 	public boolean isActive() {

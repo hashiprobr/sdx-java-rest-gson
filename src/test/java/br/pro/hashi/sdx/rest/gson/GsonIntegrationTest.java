@@ -18,6 +18,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import br.pro.hashi.sdx.rest.Builder;
 import br.pro.hashi.sdx.rest.client.RestClientBuilder;
 import br.pro.hashi.sdx.rest.gson.mock.Address;
+import br.pro.hashi.sdx.rest.gson.mock.Email;
 import br.pro.hashi.sdx.rest.gson.mock.User;
 import br.pro.hashi.sdx.rest.server.RestServerBuilder;
 import br.pro.hashi.sdx.rest.transform.Deserializer;
@@ -44,6 +45,7 @@ class GsonIntegrationTest {
 				    "0",
 				    "Serializing Street"
 				  ],
+				  "email": "serializing@email.com",
 				  "active": true
 				}
 				""", getSerializer());
@@ -65,6 +67,7 @@ class GsonIntegrationTest {
 				    "1",
 				    "Deserializing Street"
 				  ],
+				  "email": "deserializing@email.com",
 				  "active": false
 				}
 				""");
@@ -85,6 +88,10 @@ class GsonIntegrationTest {
 				    "number": 0,
 				    "city": "Serializing City"
 				  },
+				  "email": {
+				    "login": "serializing",
+				    "domain": "email.com"
+				  },
 				  "active": true
 				}
 				""", getSerializer());
@@ -104,6 +111,10 @@ class GsonIntegrationTest {
 				    "street": "Deserializing Street",
 				    "number": 1,
 				    "city": "Deserializing City"
+				  },
+				  "email": {
+				  	"login": "deserializing",
+				  	"domain": "email.com"
 				  },
 				  "active": false
 				}
@@ -143,9 +154,13 @@ class GsonIntegrationTest {
 
 	private void assertReads(String expected, Serializer serializer) {
 		Address address = new Address("Serializing Street", 0, "Serializing City");
+		Email email = new Email();
+		email.setLogin("serializing");
+		email.setDomain("email.com");
 		User user = new User();
 		user.setName("Serializing Name");
 		user.setAddress(address);
+		user.setEmail(email);
 		user.setActive(true);
 		Reader reader = serializer.toReader(user);
 		expected = expected.strip();
@@ -166,10 +181,13 @@ class GsonIntegrationTest {
 		Reader reader = new StringReader(content);
 		User user = deserializer.fromReader(reader, User.class);
 		Address address = user.getAddress();
+		Email email = user.getEmail();
 		assertEquals("Deserializing Name", user.getName());
 		assertEquals("Deserializing Street", address.getStreet());
 		assertEquals(1, address.getNumber());
 		assertEquals("Deserializing City", address.getCity());
+		assertEquals("deserializing", email.getLogin());
+		assertEquals("email.com", email.getDomain());
 		assertFalse(user.isActive());
 	}
 }

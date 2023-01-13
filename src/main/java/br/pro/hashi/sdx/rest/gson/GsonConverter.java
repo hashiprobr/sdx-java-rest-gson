@@ -18,22 +18,26 @@ public abstract class GsonConverter<S, T> extends Converter<S, T> {
 		this.serializer = new JsonSerializer<>() {
 			@Override
 			public JsonElement serialize(S src, Type typeOfSrc, JsonSerializationContext context) {
+				System.out.println(src);
 				return context.serialize(to(src), getTargetType());
 			}
 		};
 		this.deserializer = new JsonDeserializer<>() {
 			@Override
 			public S deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+				System.out.println(json);
 				return from(context.deserialize(json, getTargetType()));
 			}
 		};
 	}
 
 	public final JsonSerializer<S> getSerializer() {
+		System.out.println("hey");
 		return serializer;
 	}
 
 	public final JsonDeserializer<S> getDeserializer() {
+		System.out.println("hey");
 		return deserializer;
 	}
 }
