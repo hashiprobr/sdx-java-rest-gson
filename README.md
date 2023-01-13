@@ -1,4 +1,5 @@
 sdx-rest-gson
 =============
 
-**Gson support for sdx-rest.**
+**[Gson](https://github.com/google/gson) extension for
+[sdx-rest](https://github.com/hashiprobr/sdx-java-rest).**
