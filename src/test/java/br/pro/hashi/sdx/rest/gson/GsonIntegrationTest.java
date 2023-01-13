@@ -25,18 +25,18 @@ import br.pro.hashi.sdx.rest.transform.Deserializer;
 import br.pro.hashi.sdx.rest.transform.Serializer;
 
 class GsonIntegrationTest {
-	private Builder<?> builder;
 	private Map<String, Serializer> serializers;
 	private Map<String, Deserializer> deserializers;
+	private Builder<?> builder;
 	private GsonInjector injector;
 
 	@ParameterizedTest
 	@ValueSource(classes = {
 			RestClientBuilder.class,
 			RestServerBuilder.class })
-	<T extends Builder<T>> void serializesWithConverter(Class<T> type) {
-		mockBuilderAndConstructInjector(type);
-		injectWithConverter();
+	<T extends Builder<T>> void serializesWithConverters(Class<T> type) {
+		setUp(type);
+		injectWithConverters();
 		assertReads("""
 				{
 				  "name": "Serializing Name",
@@ -55,9 +55,9 @@ class GsonIntegrationTest {
 	@ValueSource(classes = {
 			RestClientBuilder.class,
 			RestServerBuilder.class })
-	<T extends Builder<T>> void deserializesWithConverter(Class<T> type) {
-		mockBuilderAndConstructInjector(type);
-		injectWithConverter();
+	<T extends Builder<T>> void deserializesWithConverters(Class<T> type) {
+		setUp(type);
+		injectWithConverters();
 		Deserializer deserializer = getDeserializer();
 		assertWrites(deserializer, """
 				{
@@ -77,9 +77,9 @@ class GsonIntegrationTest {
 	@ValueSource(classes = {
 			RestClientBuilder.class,
 			RestServerBuilder.class })
-	<T extends Builder<T>> void serializesWithoutConverter(Class<T> type) {
-		mockBuilderAndConstructInjector(type);
-		injectWithoutConverter();
+	<T extends Builder<T>> void serializesWithoutConverters(Class<T> type) {
+		setUp(type);
+		injectWithoutConverters();
 		assertReads("""
 				{
 				  "name": "Serializing Name",
@@ -101,9 +101,9 @@ class GsonIntegrationTest {
 	@ValueSource(classes = {
 			RestClientBuilder.class,
 			RestServerBuilder.class })
-	<T extends Builder<T>> void deserializesWithoutConverter(Class<T> type) {
-		mockBuilderAndConstructInjector(type);
-		injectWithoutConverter();
+	<T extends Builder<T>> void deserializesWithoutConverters(Class<T> type) {
+		setUp(type);
+		injectWithoutConverters();
 		assertWrites(getDeserializer(), """
 				{
 				  "name": "Deserializing Name",
@@ -121,7 +121,7 @@ class GsonIntegrationTest {
 				""");
 	}
 
-	private <T extends Builder<T>> void mockBuilderAndConstructInjector(Class<T> type) {
+	private <T extends Builder<T>> void setUp(Class<T> type) {
 		serializers = new HashMap<>();
 		deserializers = new HashMap<>();
 		builder = mock(type);
@@ -136,11 +136,11 @@ class GsonIntegrationTest {
 		injector = new GsonInjector();
 	}
 
-	private void injectWithConverter() {
+	private void injectWithConverters() {
 		injector.inject(builder, "br.pro.hashi.sdx.rest.gson.mock");
 	}
 
-	private void injectWithoutConverter() {
+	private void injectWithoutConverters() {
 		injector.inject(builder);
 	}
 
@@ -153,15 +153,15 @@ class GsonIntegrationTest {
 	}
 
 	private void assertReads(String expected, Serializer serializer) {
-		Address address = new Address("Serializing Street", 0, "Serializing City");
 		Email email = new Email();
 		email.setLogin("serializing");
 		email.setDomain("email.com");
+		Address address = new Address("Serializing Street", 0, "Serializing City");
 		User user = new User();
-		user.setName("Serializing Name");
-		user.setAddress(address);
-		user.setEmail(email);
 		user.setActive(true);
+		user.setEmail(email);
+		user.setAddress(address);
+		user.setName("Serializing Name");
 		Reader reader = serializer.toReader(user);
 		expected = expected.strip();
 		char[] chars = new char[expected.length()];
@@ -173,19 +173,19 @@ class GsonIntegrationTest {
 		} catch (IOException exception) {
 			throw new AssertionError(exception);
 		}
-		assertEquals(-1, b);
 		assertEquals(expected, new String(chars));
+		assertEquals(-1, b);
 	}
 
 	private void assertWrites(Deserializer deserializer, String content) {
 		Reader reader = new StringReader(content);
 		User user = deserializer.fromReader(reader, User.class);
-		Address address = user.getAddress();
-		Email email = user.getEmail();
 		assertEquals("Deserializing Name", user.getName());
+		Address address = user.getAddress();
 		assertEquals("Deserializing Street", address.getStreet());
 		assertEquals(1, address.getNumber());
 		assertEquals("Deserializing City", address.getCity());
+		Email email = user.getEmail();
 		assertEquals("deserializing", email.getLogin());
 		assertEquals("email.com", email.getDomain());
 		assertFalse(user.isActive());
