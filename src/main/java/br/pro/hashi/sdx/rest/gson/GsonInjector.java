@@ -23,22 +23,25 @@ public class GsonInjector extends Injector {
 	}
 
 	public void inject(Builder<?> builder) {
-		GsonBuilder gsonBuilder = newGsonBuilder();
-		inject(builder, gsonBuilder.create());
+		inject(builder, newGsonBuilder());
 	}
 
 	public void inject(Builder<?> builder, String packageName) {
-		GsonBuilder gsonBuilder = newGsonBuilder();
+		inject(builder, newGsonBuilder(), packageName);
+	}
+
+	public void inject(Builder<?> builder, GsonBuilder gsonBuilder, String packageName) {
 		for (GsonConverter<?, ?> converter : getSubConverters(packageName, GsonConverter.class)) {
 			Type type = converter.getSourceType();
 			gsonBuilder.registerTypeAdapter(type, converter.getSerializer());
 			gsonBuilder.registerTypeAdapter(type, converter.getDeserializer());
 			logger.info("Registered %s".formatted(converter.getClass().getName()));
 		}
-		inject(builder, gsonBuilder.create());
+		inject(builder, gsonBuilder);
 	}
 
-	public void inject(Builder<?> builder, Gson gson) {
+	public void inject(Builder<?> builder, GsonBuilder gsonBuilder) {
+		Gson gson = gsonBuilder.create();
 		builder.withSerializer(JSON_TYPE, new GsonSerializer(gson));
 		builder.withDeserializer(JSON_TYPE, new GsonDeserializer(gson));
 	}

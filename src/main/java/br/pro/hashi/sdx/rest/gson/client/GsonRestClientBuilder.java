@@ -1,6 +1,6 @@
 package br.pro.hashi.sdx.rest.gson.client;
 
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import br.pro.hashi.sdx.rest.client.RestClientBuilder;
 import br.pro.hashi.sdx.rest.gson.GsonInjector;
@@ -14,7 +14,11 @@ public class GsonRestClientBuilder extends RestClientBuilder {
 		new GsonInjector().inject(this, packageName);
 	}
 
-	public GsonRestClientBuilder(Gson gson) {
-		new GsonInjector().inject(this, gson);
+	public GsonRestClientBuilder(GsonBuilder gsonBuilder, String packageName) {
+		new GsonInjector().inject(this, gsonBuilder, packageName);
+	}
+
+	public GsonRestClientBuilder(GsonBuilder gsonBuilder) {
+		new GsonInjector().inject(this, gsonBuilder);
 	}
 }
