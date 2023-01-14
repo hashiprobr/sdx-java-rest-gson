@@ -1,6 +1,7 @@
 package br.pro.hashi.sdx.rest.gson.transform;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -71,9 +72,11 @@ class GsonSerializerTest {
 	@Test
 	void throwsUncheckedIOExceptionIfPlumberThrowsIOException() throws IOException {
 		Object body = new Object();
-		when(plumber.connect(any())).thenThrow(IOException.class);
-		assertThrows(UncheckedIOException.class, () -> {
+		IOException cause = new IOException();
+		when(plumber.connect(any())).thenThrow(cause);
+		Exception exception = assertThrows(UncheckedIOException.class, () -> {
 			s.toReader(body, Object.class);
 		});
+		assertSame(cause, exception.getCause());
 	}
 }
