@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.util.function.Consumer;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 
 import br.pro.hashi.sdx.rest.transform.Serializer;
 import br.pro.hashi.sdx.rest.transform.extension.Plumber;
@@ -18,6 +19,15 @@ public class GsonSerializer implements Serializer {
 	public GsonSerializer(Gson gson) {
 		this.plumber = new Plumber();
 		this.gson = gson;
+	}
+
+	@Override
+	public <T> void write(T body, Class<T> type, Writer writer) {
+		try {
+			gson.toJson(body, type, writer);
+		} catch (JsonIOException exception) {
+			throw new UncheckedIOException(new IOException(exception));
+		}
 	}
 
 	@Override

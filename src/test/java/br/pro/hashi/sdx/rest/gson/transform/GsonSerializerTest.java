@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.when;
@@ -24,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 
 import br.pro.hashi.sdx.rest.transform.Serializer;
 import br.pro.hashi.sdx.rest.transform.extension.Plumber;
@@ -45,6 +47,31 @@ class GsonSerializerTest {
 	@AfterEach
 	void tearDown() {
 		construction.close();
+	}
+
+	@Test
+	void writesWhatGsonWrites() {
+		Object body = new Object();
+		doAnswer((invocation) -> {
+			Appendable appendable = invocation.getArgument(2);
+			appendable.append("content");
+			return null;
+		}).when(gson).toJson(eq(body), eq(Object.class), any(Appendable.class));
+		Writer writer = new StringWriter();
+		s.write(body, Object.class, writer);
+		assertEquals("content", writer.toString());
+	}
+
+	@Test
+	void writeThrowsUncheckedIOExceptionIfGsonThrowsJsonIOException() throws IOException {
+		Object body = new Object();
+		JsonIOException cause = mock(JsonIOException.class);
+		doThrow(cause).when(gson).toJson(eq(body), eq(Object.class), any(Appendable.class));
+		Writer writer = new StringWriter();
+		Exception exception = assertThrows(UncheckedIOException.class, () -> {
+			s.write(body, Object.class, writer);
+		});
+		assertSame(cause, exception.getCause().getCause());
 	}
 
 	@Test
