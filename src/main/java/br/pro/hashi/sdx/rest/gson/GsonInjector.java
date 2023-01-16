@@ -63,7 +63,7 @@ public class GsonInjector extends Injector {
 	 * <p>
 	 * This method instantiates a {@link Gson} with a default configuration (see
 	 * {@code inject(Builder<?>)}) and extends its type support with instances of
-	 * all concrete subclasses of {@link GsonConverter} in a specified package.
+	 * all concrete implementations of {@link GsonConverter} in a specified package.
 	 * </p>
 	 * 
 	 * @param builder     the client or server builder
@@ -81,7 +81,7 @@ public class GsonInjector extends Injector {
 	 * <p>
 	 * This method uses a specified {@link GsonBuilder} to instantiate a
 	 * {@link Gson} and extends its type support with instances of all concrete
-	 * subclasses of {@link GsonConverter} in a specified package.
+	 * implementations of {@link GsonConverter} in a specified package.
 	 * </p>
 	 * 
 	 * @param builder     the client or server builder
@@ -91,8 +91,8 @@ public class GsonInjector extends Injector {
 	public void inject(Builder<?> builder, GsonBuilder gsonBuilder, String packageName) {
 		for (GsonConverter<?, ?> converter : getSubConverters(packageName, GsonConverter.class)) {
 			Type type = converter.getSourceType();
-			gsonBuilder.registerTypeAdapter(type, converter.getSerializer());
-			gsonBuilder.registerTypeAdapter(type, converter.getDeserializer());
+			gsonBuilder.registerTypeAdapter(type, converter.getGsonSerializer());
+			gsonBuilder.registerTypeAdapter(type, converter.getGsonDeserializer());
 			logger.info("Registered %s".formatted(converter.getClass().getName()));
 		}
 		inject(builder, gsonBuilder);

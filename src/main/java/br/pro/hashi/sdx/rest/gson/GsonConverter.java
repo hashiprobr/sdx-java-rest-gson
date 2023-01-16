@@ -34,7 +34,7 @@ public interface GsonConverter<S, T> extends Converter<S, T> {
 	 * 
 	 * @return the Gson serializer
 	 */
-	default JsonSerializer<S> getSerializer() {
+	default JsonSerializer<S> getGsonSerializer() {
 		return new JsonSerializer<>() {
 			@Override
 			public JsonElement serialize(S src, Type typeOfSrc, JsonSerializationContext context) {
@@ -53,7 +53,7 @@ public interface GsonConverter<S, T> extends Converter<S, T> {
 	 * 
 	 * @return the Gson deserializer
 	 */
-	default JsonDeserializer<S> getDeserializer() {
+	default JsonDeserializer<S> getGsonDeserializer() {
 		return new JsonDeserializer<>() {
 			@Override
 			public S deserialize(JsonElement json, Type typeOfS, JsonDeserializationContext context) {

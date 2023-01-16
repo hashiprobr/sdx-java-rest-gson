@@ -42,7 +42,7 @@ public class GsonRestClientBuilder extends RestClientBuilder {
 	 * <p>
 	 * This method instantiates a {@link Gson} with a default configuration (see
 	 * {@code inject(Builder<?>)}) and extends its type support with instances of
-	 * all concrete subclasses of {@link GsonConverter} in a specified package.
+	 * all concrete implementations of {@link GsonConverter} in a specified package.
 	 * </p>
 	 * 
 	 * @param packageName the package name
@@ -59,7 +59,7 @@ public class GsonRestClientBuilder extends RestClientBuilder {
 	 * <p>
 	 * This method uses a specified {@link GsonBuilder} to instantiate a
 	 * {@link Gson} and extends its type support with instances of all concrete
-	 * subclasses of {@link GsonConverter} in a specified package.
+	 * implementations of {@link GsonConverter} in a specified package.
 	 * </p>
 	 * 
 	 * @param gsonBuilder the Gson builder
