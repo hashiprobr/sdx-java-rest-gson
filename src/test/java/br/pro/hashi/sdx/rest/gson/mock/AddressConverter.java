@@ -4,7 +4,7 @@ import java.util.List;
 
 import br.pro.hashi.sdx.rest.gson.GsonConverter;
 
-public class AddressConverter extends GsonConverter<Address, List<String>> {
+public class AddressConverter implements GsonConverter<Address, List<String>> {
 	@Override
 	public List<String> to(Address source) {
 		return List.of(source.getCity(), Integer.toString(source.getNumber()), source.getStreet());

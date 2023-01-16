@@ -23,43 +23,42 @@ import br.pro.hashi.sdx.rest.transform.extension.Converter;
  * @param <S> the source type
  * @param <T> the target type
  */
-public abstract class GsonConverter<S, T> extends Converter<S, T> {
-	private final JsonSerializer<S> serializer;
-	private final JsonDeserializer<S> deserializer;
-
+public interface GsonConverter<S, T> extends Converter<S, T> {
 	/**
-	 * Constructs a new Gson converter.
+	 * <p>
+	 * Obtains a {@link JsonSerializer<S>} based on this converter.
+	 * </p>
+	 * <p>
+	 * Classes are encouraged to provide an alternative implementation.
+	 * </p>
+	 * 
+	 * @return the Gson serializer
 	 */
-	protected GsonConverter() {
-		this.serializer = new JsonSerializer<>() {
+	default JsonSerializer<S> getSerializer() {
+		return new JsonSerializer<>() {
 			@Override
 			public JsonElement serialize(S src, Type typeOfSrc, JsonSerializationContext context) {
 				return context.serialize(to(src), getTargetType());
 			}
 		};
-		this.deserializer = new JsonDeserializer<>() {
-			@Override
-			public S deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
-				return from(context.deserialize(json, getTargetType()));
-			}
-		};
 	}
 
 	/**
-	 * Obtains a {@link JsonSerializer<T>} based on this converter.
-	 * 
-	 * @return the Gson serializer
-	 */
-	public final JsonSerializer<S> getSerializer() {
-		return serializer;
-	}
-
-	/**
-	 * Obtains a {@link JsonDeserializer<T>} based on this converter.
+	 * <p>
+	 * Obtains a {@link JsonDeserializer<S>} based on this converter.
+	 * </p>
+	 * <p>
+	 * Classes are encouraged to provide an alternative implementation.
+	 * </p>
 	 * 
 	 * @return the Gson deserializer
 	 */
-	public final JsonDeserializer<S> getDeserializer() {
-		return deserializer;
+	default JsonDeserializer<S> getDeserializer() {
+		return new JsonDeserializer<>() {
+			@Override
+			public S deserialize(JsonElement json, Type typeOfS, JsonDeserializationContext context) {
+				return from(context.deserialize(json, getTargetType()));
+			}
+		};
 	}
 }

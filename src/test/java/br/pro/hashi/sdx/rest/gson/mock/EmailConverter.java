@@ -2,7 +2,7 @@ package br.pro.hashi.sdx.rest.gson.mock;
 
 import br.pro.hashi.sdx.rest.gson.GsonConverter;
 
-public class EmailConverter extends GsonConverter<Email, String> {
+public class EmailConverter implements GsonConverter<Email, String> {
 	@Override
 	public String to(Email source) {
 		return "%s@%s".formatted(source.getLogin(), source.getDomain());
