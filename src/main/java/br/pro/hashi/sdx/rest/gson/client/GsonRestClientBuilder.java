@@ -41,8 +41,8 @@ public class GsonRestClientBuilder extends RestClientBuilder {
 	 * </p>
 	 * <p>
 	 * This method instantiates a {@link Gson} with a default configuration (see
-	 * {@code inject(Builder<?>)}) and extends its type support with instances of
-	 * all concrete implementations of {@link GsonConverter} in a specified package.
+	 * no-args constructor) and extends its type support with instances of all
+	 * concrete implementations of {@link GsonConverter} in a specified package.
 	 * </p>
 	 * 
 	 * @param packageName the package name
