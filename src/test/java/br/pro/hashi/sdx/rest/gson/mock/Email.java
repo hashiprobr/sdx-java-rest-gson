@@ -4,9 +4,6 @@ public class Email {
 	private String login;
 	private String domain;
 
-	public Email() {
-	}
-
 	public String getLogin() {
 		return login;
 	}
