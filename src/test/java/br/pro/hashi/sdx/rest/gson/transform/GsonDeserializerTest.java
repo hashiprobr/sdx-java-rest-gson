@@ -43,7 +43,7 @@ class GsonDeserializerTest {
 	void returnsWhatGsonReturnsWithHint() {
 		Reader reader = newReader();
 		Object body = mockReturn(reader);
-		assertSame(body, d.fromReader(reader, new Hint<Object>() {}));
+		assertSame(body, d.fromReader(reader, new Hint<Object>() {}.getType()));
 	}
 
 	@Test

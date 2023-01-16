@@ -63,7 +63,7 @@ class GsonSerializerTest {
 	void writesWhatGsonWritesWithHint() {
 		Object body = mockGson();
 		StringWriter writer = new StringWriter();
-		s.write(body, new Hint<Object>() {}, writer);
+		s.write(body, new Hint<Object>() {}.getType(), writer);
 		assertEqualsBody(writer);
 	}
 
@@ -95,7 +95,7 @@ class GsonSerializerTest {
 	void readsWhatGsonWritesWithHint() throws IOException {
 		Object body = mockGson();
 		mockPlumber();
-		Reader reader = s.toReader(body, new Hint<Object>() {});
+		Reader reader = s.toReader(body, new Hint<Object>() {}.getType());
 		assertEqualsBody(reader);
 	}
 
