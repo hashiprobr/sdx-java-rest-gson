@@ -17,7 +17,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UncheckedIOException;
 import java.io.Writer;
-import java.lang.reflect.Type;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.AfterEach;
@@ -75,7 +74,7 @@ class GsonSerializerTest {
 	void writeThrowsUncheckedIOExceptionIfGsonThrowsJsonIOException() {
 		Object body = new Object();
 		Throwable cause = mock(JsonIOException.class);
-		doThrow(cause).when(gson).toJson(eq(body), (Type) eq(Object.class), any(Appendable.class));
+		doThrow(cause).when(gson).toJson(eq(body), eq(Object.class), any(Appendable.class));
 		Writer writer = new StringWriter();
 		Exception exception = assertThrows(UncheckedIOException.class, () -> {
 			s.write(body, writer);
@@ -130,7 +129,7 @@ class GsonSerializerTest {
 			Appendable appendable = invocation.getArgument(2);
 			appendable.append("body");
 			return null;
-		}).when(gson).toJson(eq(body), (Type) eq(Object.class), any(Appendable.class));
+		}).when(gson).toJson(eq(body), eq(Object.class), any(Appendable.class));
 		return body;
 	}
 

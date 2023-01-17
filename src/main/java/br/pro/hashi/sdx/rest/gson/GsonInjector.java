@@ -112,7 +112,10 @@ public class GsonInjector extends Injector {
 	 * @param gsonBuilder the Gson builder
 	 */
 	public void inject(Builder<?> builder, GsonBuilder gsonBuilder) {
-		Gson gson = gsonBuilder.create();
+		inject(builder, gsonBuilder.create());
+	}
+
+	private void inject(Builder<?> builder, Gson gson) {
 		builder.withSerializer(JSON_TYPE, new GsonSerializer(gson));
 		builder.withDeserializer(JSON_TYPE, new GsonDeserializer(gson));
 	}
