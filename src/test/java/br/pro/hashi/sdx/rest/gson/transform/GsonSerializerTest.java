@@ -72,7 +72,7 @@ class GsonSerializerTest {
 	}
 
 	@Test
-	void writeThrowsUncheckedIOExceptionIfGsonThrowsJsonIOException() throws IOException {
+	void writeThrowsUncheckedIOExceptionIfGsonThrowsJsonIOException() {
 		Object body = new Object();
 		Throwable cause = mock(JsonIOException.class);
 		doThrow(cause).when(gson).toJson(eq(body), (Type) eq(Object.class), any(Appendable.class));
