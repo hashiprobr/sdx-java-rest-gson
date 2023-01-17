@@ -357,7 +357,13 @@ class GsonIntegrationTest {
 		Reader reader = serializers.get("application/json").toReader(object, type);
 		content = content.strip();
 		char[] chars = new char[content.length()];
-		reader.read(chars);
+		int offset = 0;
+		int remaining = chars.length;
+		while (remaining > 0) {
+			int length = reader.read(chars, offset, remaining);
+			offset += length;
+			remaining -= length;
+		}
 		assertEquals(-1, reader.read());
 		assertEquals(content, new String(chars));
 		reader.close();
