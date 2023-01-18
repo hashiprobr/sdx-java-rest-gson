@@ -36,6 +36,11 @@ public class GsonSerializer implements Serializer {
 		Reader reader;
 		Consumer<Writer> consumer = (writer) -> {
 			gson.toJson(body, type, writer);
+			try {
+				writer.close();
+			} catch (IOException exception) {
+				throw new Plumber.Exception(exception);
+			}
 		};
 		try {
 			reader = plumber.connect(consumer);

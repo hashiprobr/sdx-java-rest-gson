@@ -9,6 +9,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -110,6 +111,25 @@ class GsonSerializerTest {
 		assertEquals(-1, reader.read());
 		assertEqualsBody(new String(chars));
 		reader.close();
+	}
+
+	@Test
+	void throwsPlumberExceptionIfWriterThrowsIOException() throws IOException {
+		Object body = new Object();
+		doAnswer((invocation) -> {
+			Writer writer = (Writer) invocation.getArgument(2);
+			doThrow(IOException.class).when(writer).close();
+			return null;
+		}).when(gson).toJson(eq(body), eq(Object.class), any(Appendable.class));
+		when(plumber.connect(any())).thenAnswer((invocation) -> {
+			Consumer<Writer> consumer = invocation.getArgument(0);
+			Writer writer = spy(Writer.nullWriter());
+			assertThrows(Plumber.Exception.class, () -> {
+				consumer.accept(writer);
+			});
+			return null;
+		});
+		s.toReader(body);
 	}
 
 	@Test
