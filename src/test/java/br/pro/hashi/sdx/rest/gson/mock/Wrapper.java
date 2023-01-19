@@ -1,7 +1,7 @@
 package br.pro.hashi.sdx.rest.gson.mock;
 
 public class Wrapper<T> {
-	T value;
+	private T value;
 
 	Wrapper() {
 	}
