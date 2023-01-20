@@ -20,7 +20,7 @@ public class GsonDeserializer implements Deserializer {
 	}
 
 	@Override
-	public <T> T fromReader(Reader reader, Type type) {
+	public <T> T read(Reader reader, Type type) {
 		T body;
 		try {
 			body = gson.fromJson(reader, type);
@@ -28,6 +28,12 @@ public class GsonDeserializer implements Deserializer {
 			throw new UncheckedIOException(new IOException(exception));
 		} catch (JsonSyntaxException exception) {
 			throw new DeserializingException(exception);
+		} finally {
+			try {
+				reader.close();
+			} catch (IOException exception) {
+				throw new UncheckedIOException(exception);
+			}
 		}
 		return body;
 	}

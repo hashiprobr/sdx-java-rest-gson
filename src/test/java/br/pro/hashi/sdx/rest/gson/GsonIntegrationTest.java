@@ -7,9 +7,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ class GsonIntegrationTest {
 	@ValueSource(classes = {
 			RestClientBuilder.class,
 			RestServerBuilder.class })
-	<T extends Builder<T>> void serializesUserWithConverters(Class<T> type) throws IOException {
+	<T extends Builder<T>> void serializesUserWithConverters(Class<T> type) {
 		setUp(type);
 		injectWithConverters();
 		assertReadsUser("""
@@ -62,7 +62,7 @@ class GsonIntegrationTest {
 	@ValueSource(classes = {
 			RestClientBuilder.class,
 			RestServerBuilder.class })
-	<T extends Builder<T>> void serializesUserWithoutConverters(Class<T> type) throws IOException {
+	<T extends Builder<T>> void serializesUserWithoutConverters(Class<T> type) {
 		setUp(type);
 		injectWithoutConverters();
 		assertReadsUser("""
@@ -82,7 +82,7 @@ class GsonIntegrationTest {
 				""");
 	}
 
-	private void assertReadsUser(String content) throws IOException {
+	private void assertReadsUser(String content) {
 		Email email = new Email();
 		email.setLogin("serializing");
 		email.setDomain("email.com");
@@ -157,7 +157,7 @@ class GsonIntegrationTest {
 	@ValueSource(classes = {
 			RestClientBuilder.class,
 			RestServerBuilder.class })
-	<T extends Builder<T>> void serializesSheetWithConverters(Class<T> type) throws IOException {
+	<T extends Builder<T>> void serializesSheetWithConverters(Class<T> type) {
 		setUp(type);
 		injectWithConverters();
 		assertReadsSheet("""
@@ -180,7 +180,7 @@ class GsonIntegrationTest {
 	@ValueSource(classes = {
 			RestClientBuilder.class,
 			RestServerBuilder.class })
-	<T extends Builder<T>> void serializesSheetWithoutConverters(Class<T> type) throws IOException {
+	<T extends Builder<T>> void serializesSheetWithoutConverters(Class<T> type) {
 		setUp(type);
 		injectWithoutConverters();
 		assertReadsSheet("""
@@ -201,7 +201,7 @@ class GsonIntegrationTest {
 				""");
 	}
 
-	private void assertReadsSheet(String content) throws IOException {
+	private void assertReadsSheet(String content) {
 		Sheet sheet = new Sheet();
 		sheet.addRow("Street 0", 0, "City 0");
 		sheet.addRow("Street 1", 1, "City 1");
@@ -272,7 +272,7 @@ class GsonIntegrationTest {
 	@ValueSource(classes = {
 			RestClientBuilder.class,
 			RestServerBuilder.class })
-	<T extends Builder<T>> void serializesBooleanWrappersWithConverters(Class<T> type) throws IOException {
+	<T extends Builder<T>> void serializesBooleanWrappersWithConverters(Class<T> type) {
 		setUp(type);
 		injectWithConverters();
 		assertReadsBooleanWrappers("""
@@ -287,7 +287,7 @@ class GsonIntegrationTest {
 	@ValueSource(classes = {
 			RestClientBuilder.class,
 			RestServerBuilder.class })
-	<T extends Builder<T>> void serializesBooleanWrappersWithoutConverters(Class<T> type) throws IOException {
+	<T extends Builder<T>> void serializesBooleanWrappersWithoutConverters(Class<T> type) {
 		setUp(type);
 		injectWithoutConverters();
 		assertReadsBooleanWrappers("""
@@ -302,7 +302,7 @@ class GsonIntegrationTest {
 				""", List.class);
 	}
 
-	private void assertReadsBooleanWrappers(String content, Type type) throws IOException {
+	private void assertReadsBooleanWrappers(String content, Type type) {
 		List<Wrapper<Boolean>> wrappers = new ArrayList<>();
 		wrappers.add(new Wrapper<>(false));
 		wrappers.add(new Wrapper<>(true));
@@ -354,7 +354,7 @@ class GsonIntegrationTest {
 	@ValueSource(classes = {
 			RestClientBuilder.class,
 			RestServerBuilder.class })
-	<T extends Builder<T>> void serializesByteWrappersWithConverters(Class<T> type) throws IOException {
+	<T extends Builder<T>> void serializesByteWrappersWithConverters(Class<T> type) {
 		setUp(type);
 		injectWithConverters();
 		assertReadsByteWrappers("""
@@ -376,7 +376,7 @@ class GsonIntegrationTest {
 	@ValueSource(classes = {
 			RestClientBuilder.class,
 			RestServerBuilder.class })
-	<T extends Builder<T>> void serializesByteWrappersWithoutConverters(Class<T> type) throws IOException {
+	<T extends Builder<T>> void serializesByteWrappersWithoutConverters(Class<T> type) {
 		setUp(type);
 		injectWithoutConverters();
 		assertReadsByteWrappers("""
@@ -391,7 +391,7 @@ class GsonIntegrationTest {
 				""", List.class);
 	}
 
-	private void assertReadsByteWrappers(String content, Type type) throws IOException {
+	private void assertReadsByteWrappers(String content, Type type) {
 		List<Wrapper<Byte>> wrappers = new ArrayList<>();
 		wrappers.add(new Wrapper<>((byte) 63));
 		wrappers.add(new Wrapper<>((byte) 127));
@@ -469,24 +469,14 @@ class GsonIntegrationTest {
 		injector.inject(builder);
 	}
 
-	private void assertReads(String content, Object object, Type type) throws IOException {
-		Reader reader = serializers.get("application/json").toReader(object, type);
-		content = content.strip();
-		int length;
-		char[] chars = new char[content.length()];
-		int offset = 0;
-		int remaining = chars.length;
-		while (remaining > 0 && (length = reader.read(chars, offset, remaining)) != -1) {
-			offset += length;
-			remaining -= length;
-		}
-		assertEquals(-1, reader.read());
-		assertEquals(content, new String(chars));
-		reader.close();
+	private void assertReads(String content, Object object, Type type) {
+		StringWriter writer = new StringWriter();
+		serializers.get("application/json").write(object, type, writer);
+		assertEquals(content.strip(), writer.toString());
 	}
 
 	private <T> T fromString(String content, Type type) {
 		Reader reader = new StringReader(content);
-		return deserializers.get("application/json").fromReader(reader, type);
+		return deserializers.get("application/json").read(reader, type);
 	}
 }
