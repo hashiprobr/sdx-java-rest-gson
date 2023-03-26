@@ -32,6 +32,7 @@ public class GsonRestServerBuilder extends RestServerBuilder {
 	 */
 	public GsonRestServerBuilder() {
 		new GsonInjector().inject(this);
+		addExtension();
 	}
 
 	/**
@@ -49,6 +50,7 @@ public class GsonRestServerBuilder extends RestServerBuilder {
 	 */
 	public GsonRestServerBuilder(String packageName) {
 		new GsonInjector().inject(this, packageName);
+		addExtension();
 	}
 
 	/**
@@ -67,6 +69,7 @@ public class GsonRestServerBuilder extends RestServerBuilder {
 	 */
 	public GsonRestServerBuilder(GsonBuilder gsonBuilder, String packageName) {
 		new GsonInjector().inject(this, gsonBuilder, packageName);
+		addExtension();
 	}
 
 	/**
@@ -83,5 +86,10 @@ public class GsonRestServerBuilder extends RestServerBuilder {
 	 */
 	public GsonRestServerBuilder(GsonBuilder gsonBuilder) {
 		new GsonInjector().inject(this, gsonBuilder);
+		addExtension();
+	}
+
+	private void addExtension() {
+		this.withExtension("json", "application/json");
 	}
 }
