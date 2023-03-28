@@ -23,12 +23,6 @@ public class GsonSerializer implements Serializer {
 			gson.toJson(body, type, writer);
 		} catch (JsonIOException exception) {
 			throw new UncheckedIOException(new IOException(exception));
-		} finally {
-			try {
-				writer.close();
-			} catch (IOException exception) {
-				throw new UncheckedIOException(exception);
-			}
 		}
 	}
 }
