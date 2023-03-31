@@ -46,6 +46,7 @@ public class GsonInjector extends Injector {
 	 * {@code   .disableJdkUnsafe()
 	 *   .disableHtmlEscaping()
 	 *   .serializeNulls()
+	 *   .serializeSpecialFloatingPointValues()
 	 *   .setPrettyPrinting()}
 	 * </pre>
 	 * 
@@ -126,6 +127,7 @@ public class GsonInjector extends Injector {
 				.disableJdkUnsafe()
 				.disableHtmlEscaping()
 				.serializeNulls()
+				.serializeSpecialFloatingPointValues()
 				.setPrettyPrinting();
 	}
 }

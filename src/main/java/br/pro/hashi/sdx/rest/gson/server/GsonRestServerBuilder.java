@@ -27,6 +27,7 @@ public class GsonRestServerBuilder extends RestServerBuilder {
 	 * {@code   .disableJdkUnsafe()
 	 *   .disableHtmlEscaping()
 	 *   .serializeNulls()
+	 *   .serializeSpecialFloatingPointValues()
 	 *   .setPrettyPrinting()}
 	 * </pre>
 	 */
