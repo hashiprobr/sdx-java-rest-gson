@@ -1,7 +1,6 @@
 package br.pro.hashi.sdx.rest.gson.server;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.verify;
@@ -28,7 +27,7 @@ class GsonRestServerTest {
 	private MockedConstruction<GsonRestServerBuilder> mockBuilderConstruction() {
 		server = mock(RestServer.class);
 		return mockConstruction(GsonRestServerBuilder.class, (mock, context) -> {
-			when(mock.build(any())).thenReturn(server);
+			when(mock.build("package")).thenReturn(server);
 		});
 	}
 }

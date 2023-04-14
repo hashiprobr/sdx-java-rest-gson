@@ -8,6 +8,7 @@ import java.lang.reflect.Type;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.JsonReader;
 
 import br.pro.hashi.sdx.rest.transform.Deserializer;
 import br.pro.hashi.sdx.rest.transform.exception.DeserializingException;
@@ -19,20 +20,25 @@ public class GsonDeserializer implements Deserializer {
 		this.gson = gson;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T read(Reader reader, Type type) {
 		T body;
-		try {
-			body = gson.fromJson(reader, type);
-		} catch (JsonIOException exception) {
-			throw new UncheckedIOException(new IOException(exception));
-		} catch (JsonSyntaxException exception) {
-			throw new DeserializingException(exception);
-		} finally {
+		if (type.equals(JsonReader.class)) {
+			body = (T) gson.newJsonReader(reader);
+		} else {
 			try {
-				reader.close();
-			} catch (IOException exception) {
-				throw new UncheckedIOException(exception);
+				body = gson.fromJson(reader, type);
+			} catch (JsonIOException exception) {
+				throw new UncheckedIOException(new IOException(exception));
+			} catch (JsonSyntaxException exception) {
+				throw new DeserializingException(exception);
+			} finally {
+				try {
+					reader.close();
+				} catch (IOException exception) {
+					throw new UncheckedIOException(exception);
+				}
 			}
 		}
 		return body;

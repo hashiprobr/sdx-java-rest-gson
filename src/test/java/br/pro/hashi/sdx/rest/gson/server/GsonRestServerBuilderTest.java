@@ -1,6 +1,7 @@
 package br.pro.hashi.sdx.rest.gson.server;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -31,7 +32,7 @@ class GsonRestServerBuilderTest {
 			doAnswer((invocation) -> {
 				mockContentType(invocation);
 				return null;
-			}).when(mock).inject(any(), any(String.class));
+			}).when(mock).inject(any(), eq("package"));
 			doAnswer((invocation) -> {
 				mockContentType(invocation);
 				return null;
@@ -39,7 +40,7 @@ class GsonRestServerBuilderTest {
 			doAnswer((invocation) -> {
 				mockContentType(invocation);
 				return null;
-			}).when(mock).inject(any(), any(), any());
+			}).when(mock).inject(any(), any(), eq("package"));
 		});
 	}
 

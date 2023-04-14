@@ -1,5 +1,7 @@
 package br.pro.hashi.sdx.rest.gson;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.Type;
 
 import org.slf4j.Logger;
@@ -21,6 +23,7 @@ import br.pro.hashi.sdx.rest.transform.extension.Injector;
  * type {@link RestServerBuilder}.
  */
 public class GsonInjector extends Injector {
+	private static final Lookup LOOKUP = MethodHandles.lookup();
 	private static final String JSON_TYPE = "application/json";
 
 	private final Logger logger;
@@ -52,7 +55,7 @@ public class GsonInjector extends Injector {
 	 * 
 	 * @param builder the client or server builder
 	 */
-	public void inject(Builder<?> builder) {
+	public final void inject(Builder<?> builder) {
 		inject(builder, newGsonBuilder());
 	}
 
@@ -70,7 +73,7 @@ public class GsonInjector extends Injector {
 	 * @param builder     the client or server builder
 	 * @param packageName the package name
 	 */
-	public void inject(Builder<?> builder, String packageName) {
+	public final void inject(Builder<?> builder, String packageName) {
 		inject(builder, newGsonBuilder(), packageName);
 	}
 
@@ -89,8 +92,8 @@ public class GsonInjector extends Injector {
 	 * @param gsonBuilder the Gson builder
 	 * @param packageName the package name
 	 */
-	public void inject(Builder<?> builder, GsonBuilder gsonBuilder, String packageName) {
-		for (GsonConverter<?, ?> converter : getSubConverters(packageName, GsonConverter.class)) {
+	public final void inject(Builder<?> builder, GsonBuilder gsonBuilder, String packageName) {
+		for (GsonConverter<?, ?> converter : getSubConverters(packageName, GsonConverter.class, LOOKUP)) {
 			Type type = converter.getSourceType();
 			gsonBuilder.registerTypeAdapter(type, converter.getGsonSerializer());
 			gsonBuilder.registerTypeAdapter(type, converter.getGsonDeserializer());
@@ -112,7 +115,7 @@ public class GsonInjector extends Injector {
 	 * @param builder     the client or server builder
 	 * @param gsonBuilder the Gson builder
 	 */
-	public void inject(Builder<?> builder, GsonBuilder gsonBuilder) {
+	public final void inject(Builder<?> builder, GsonBuilder gsonBuilder) {
 		inject(builder, gsonBuilder.create());
 	}
 
