@@ -39,37 +39,26 @@ class GsonSerializerTest {
 
 	@Test
 	void writes() {
-		Object body = mockGsonReturn();
-		StringWriter writer = new StringWriter();
-		s.write(body, writer);
-		assertEqualsBody(writer);
-	}
-
-	@Test
-	void writesWithHint() {
-		Object body = mockGsonReturn();
-		StringWriter writer = new StringWriter();
-		s.write(body, new Hint<Object>() {}.getType(), writer);
-		assertEqualsBody(writer);
-	}
-
-	private void assertEqualsBody(StringWriter writer) {
-		try {
-			writer.close();
-		} catch (IOException exception) {
-			throw new AssertionError(exception);
-		}
-		assertEquals("body", writer.toString());
-	}
-
-	private Object mockGsonReturn() {
 		Object body = new Object();
 		doAnswer((invocation) -> {
 			Writer writer = invocation.getArgument(2);
 			writer.write("body");
 			return null;
 		}).when(gson).toJson(eq(body), eq(Object.class), any(Writer.class));
-		return body;
+		StringWriter writer = new StringWriter();
+		s.write(body, writer);
+		assertContentEquals("body", writer);
+	}
+
+	@Test
+	void writesNull() {
+		StringWriter writer = new StringWriter();
+		s.write(null, writer);
+		assertContentEquals("", writer);
+	}
+
+	private void assertContentEquals(String expected, StringWriter writer) {
+		assertEquals(expected, writer.toString());
 	}
 
 	@Test

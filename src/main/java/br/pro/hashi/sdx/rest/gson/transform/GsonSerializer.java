@@ -23,6 +23,11 @@ public class GsonSerializer implements Serializer {
 	}
 
 	@Override
+	public void write(Object body, Writer writer) {
+		write(body, body == null ? Object.class : body.getClass(), writer);
+	}
+
+	@Override
 	public void write(Object body, Type type, Writer writer) {
 		if (type.equals(consumerType)) {
 			@SuppressWarnings("unchecked")
