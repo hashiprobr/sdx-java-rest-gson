@@ -22,8 +22,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
+import br.pro.hashi.sdx.rest.Hint;
 import br.pro.hashi.sdx.rest.transform.Deserializer;
-import br.pro.hashi.sdx.rest.transform.Hint;
 import br.pro.hashi.sdx.rest.transform.exception.DeserializingException;
 
 class GsonDeserializerTest {

@@ -28,6 +28,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import br.pro.hashi.sdx.rest.Builder;
+import br.pro.hashi.sdx.rest.Hint;
 import br.pro.hashi.sdx.rest.client.RestClientBuilder;
 import br.pro.hashi.sdx.rest.gson.mock.Address;
 import br.pro.hashi.sdx.rest.gson.mock.Email;
@@ -40,7 +41,6 @@ import br.pro.hashi.sdx.rest.gson.mock.User;
 import br.pro.hashi.sdx.rest.gson.mock.Wrapper;
 import br.pro.hashi.sdx.rest.server.RestServerBuilder;
 import br.pro.hashi.sdx.rest.transform.Deserializer;
-import br.pro.hashi.sdx.rest.transform.Hint;
 import br.pro.hashi.sdx.rest.transform.Serializer;
 
 class GsonIntegrationTest {

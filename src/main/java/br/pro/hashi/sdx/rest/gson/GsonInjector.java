@@ -122,7 +122,7 @@ public class GsonInjector extends Injector {
 	private void inject(Builder<?> builder, Gson gson) {
 		builder.withSerializer(JSON_TYPE, new GsonSerializer(gson));
 		builder.withDeserializer(JSON_TYPE, new GsonDeserializer(gson));
-		builder.withFallbackTextType(JSON_TYPE);
+		builder.withFallbackType(JSON_TYPE);
 	}
 
 	private GsonBuilder newGsonBuilder() {

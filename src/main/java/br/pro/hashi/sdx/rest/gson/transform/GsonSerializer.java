@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.stream.JsonWriter;
 
-import br.pro.hashi.sdx.rest.transform.Hint;
+import br.pro.hashi.sdx.rest.Hint;
 import br.pro.hashi.sdx.rest.transform.Serializer;
 
 public class GsonSerializer implements Serializer {
