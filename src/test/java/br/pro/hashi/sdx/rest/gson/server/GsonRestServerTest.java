@@ -1,33 +1,45 @@
 package br.pro.hashi.sdx.rest.gson.server;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.MockedConstruction;
+import org.mockito.MockedConstruction.MockInitializer;
+import org.mockito.MockitoAnnotations;
 
 import br.pro.hashi.sdx.rest.server.RestServer;
-import br.pro.hashi.sdx.rest.server.RestServerBuilder;
 
 class GsonRestServerTest {
-	private RestServer server;
+	private static final String PACKAGE_NAME = "package";
 
-	@Test
-	void builds() {
-		try (MockedConstruction<GsonRestServerBuilder> construction = mockBuilderConstruction()) {
-			assertSame(server, GsonRestServer.from("package"));
-			RestServerBuilder builder = construction.constructed().get(0);
-			verify(builder).build("package");
-		}
+	private AutoCloseable mocks;
+	private @Mock RestServer s;
+
+	@BeforeEach
+	void setUp() {
+		mocks = MockitoAnnotations.openMocks(this);
 	}
 
-	private MockedConstruction<GsonRestServerBuilder> mockBuilderConstruction() {
-		server = mock(RestServer.class);
-		return mockConstruction(GsonRestServerBuilder.class, (mock, context) -> {
-			when(mock.build("package")).thenReturn(server);
+	@AfterEach
+	void tearDown() {
+		assertDoesNotThrow(() -> {
+			mocks.close();
 		});
+	}
+
+	@Test
+	void gets() {
+		MockInitializer<GsonRestServerBuilder> initializer = (mock, context) -> {
+			when(mock.build(PACKAGE_NAME)).thenReturn(s);
+		};
+		try (MockedConstruction<GsonRestServerBuilder> construction = mockConstruction(GsonRestServerBuilder.class, initializer)) {
+			assertSame(s, GsonRestServer.from(PACKAGE_NAME));
+		}
 	}
 }

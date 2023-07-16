@@ -1,5 +1,4 @@
 /**
- * Provides convenience interfaces and classes for extending Gson support in
- * clients and servers.
+ * Provides classes for extending transform support via Gson.
  */
 package br.pro.hashi.sdx.rest.gson;

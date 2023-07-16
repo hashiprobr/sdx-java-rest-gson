@@ -722,7 +722,7 @@ class GsonIntegrationTest {
 			deserializers.put(invocation.getArgument(0), invocation.getArgument(1));
 			return null;
 		});
-		injector = new GsonInjector();
+		injector = GsonInjector.getInstance();
 	}
 
 	private void injectWithConverters() {

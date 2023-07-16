@@ -46,15 +46,8 @@ class GsonSerializerTest {
 			return null;
 		}).when(gson).toJson(eq(body), eq(Object.class), any(Writer.class));
 		StringWriter writer = new StringWriter();
-		s.write(body, writer);
+		s.write(body, Object.class, writer);
 		assertContentEquals("body", writer);
-	}
-
-	@Test
-	void writesNull() {
-		StringWriter writer = new StringWriter();
-		s.write(null, writer);
-		assertContentEquals("", writer);
 	}
 
 	private void assertContentEquals(String expected, StringWriter writer) {
@@ -68,7 +61,7 @@ class GsonSerializerTest {
 		Throwable cause = mock(JsonIOException.class);
 		doThrow(cause).when(gson).toJson(eq(body), eq(Object.class), any(Writer.class));
 		Exception exception = assertThrows(UncheckedIOException.class, () -> {
-			s.write(body, writer);
+			s.write(body, Object.class, writer);
 		});
 		assertSame(cause, exception.getCause().getCause());
 	}
