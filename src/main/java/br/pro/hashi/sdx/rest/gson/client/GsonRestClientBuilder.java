@@ -33,6 +33,7 @@ public class GsonRestClientBuilder extends RestClientBuilder {
 	 * </p>
 	 * 
 	 * @param gsonBuilder the Gson builder
+	 * @throws NullPointerException if the Gson builder is null
 	 */
 	public GsonRestClientBuilder(GsonBuilder gsonBuilder) {
 		GsonInjector.getInstance().inject(this, gsonBuilder);
@@ -49,6 +50,7 @@ public class GsonRestClientBuilder extends RestClientBuilder {
 	 * </p>
 	 * 
 	 * @param packageName the package name
+	 * @throws NullPointerException if the package name is null
 	 */
 	public GsonRestClientBuilder(String packageName) {
 		GsonInjector.getInstance().inject(this, packageName);
@@ -67,6 +69,8 @@ public class GsonRestClientBuilder extends RestClientBuilder {
 	 * 
 	 * @param gsonBuilder the Gson builder
 	 * @param packageName the package name
+	 * @throws NullPointerException if the Gson builder is null or package name is
+	 *                              null
 	 */
 	public GsonRestClientBuilder(GsonBuilder gsonBuilder, String packageName) {
 		GsonInjector.getInstance().inject(this, gsonBuilder, packageName);

@@ -32,13 +32,14 @@ public interface GsonConverter<S, T> extends Converter<S, T> {
 	 * Classes are encouraged to provide an alternative implementation.
 	 * </p>
 	 * 
+	 * @param a {@link Type} representing {@code T}
 	 * @return the Gson serializer
 	 */
-	default JsonSerializer<S> getGsonSerializer() {
+	default JsonSerializer<S> getGsonSerializer(Type targetType) {
 		return new JsonSerializer<>() {
 			@Override
 			public JsonElement serialize(S src, Type typeOfSrc, JsonSerializationContext context) {
-				return context.serialize(to(src), getTargetType());
+				return context.serialize(to(src), targetType);
 			}
 		};
 	}
@@ -51,13 +52,14 @@ public interface GsonConverter<S, T> extends Converter<S, T> {
 	 * Classes are encouraged to provide an alternative implementation.
 	 * </p>
 	 * 
+	 * @param a {@link Type} representing {@code T}
 	 * @return the Gson deserializer
 	 */
-	default JsonDeserializer<S> getGsonDeserializer() {
+	default JsonDeserializer<S> getGsonDeserializer(Type targetType) {
 		return new JsonDeserializer<>() {
 			@Override
 			public S deserialize(JsonElement json, Type typeOfS, JsonDeserializationContext context) {
-				return from(context.deserialize(json, getTargetType()));
+				return from(context.deserialize(json, targetType));
 			}
 		};
 	}

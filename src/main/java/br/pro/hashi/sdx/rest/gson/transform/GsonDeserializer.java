@@ -6,7 +6,9 @@ import java.io.UncheckedIOException;
 import java.lang.reflect.Type;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
@@ -20,27 +22,30 @@ public class GsonDeserializer implements Deserializer {
 		this.gson = gson;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T read(Reader reader, Type type) {
-		T body;
 		if (type.equals(JsonReader.class)) {
-			body = (T) gson.newJsonReader(reader);
-		} else {
+			@SuppressWarnings("unchecked")
+			T body = (T) gson.newJsonReader(reader);
+			return body;
+		}
+		try {
 			try {
-				body = gson.fromJson(reader, type);
-			} catch (JsonIOException exception) {
-				throw new UncheckedIOException(new IOException(exception));
+				if (type.equals(JsonElement.class)) {
+					@SuppressWarnings("unchecked")
+					T body = (T) JsonParser.parseReader(reader);
+					return body;
+				}
+				return gson.fromJson(reader, type);
 			} catch (JsonSyntaxException exception) {
 				throw new DeserializingException(exception);
+			} catch (JsonIOException exception) {
+				throw new IOException(exception);
 			} finally {
-				try {
-					reader.close();
-				} catch (IOException exception) {
-					throw new UncheckedIOException(exception);
-				}
+				reader.close();
 			}
+		} catch (IOException exception) {
+			throw new UncheckedIOException(exception);
 		}
-		return body;
 	}
 }

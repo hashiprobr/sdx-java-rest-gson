@@ -49,19 +49,20 @@ public class GsonInjector extends Injector {
 	 * client or server builder.
 	 * </p>
 	 * <p>
-	 * This method instantiates a {@link GsonBuilder} with a default configuration.
-	 * Namely, with the options below.
+	 * This method uses a {@link GsonBuilder} with a default configuration. Namely,
+	 * with the options below.
 	 * </p>
 	 * 
 	 * <pre>
 	 * {@code   .disableJdkUnsafe()
 	 *   .disableHtmlEscaping()
+	 *   .setPrettyPrinting()
 	 *   .serializeNulls()
-	 *   .serializeSpecialFloatingPointValues()
-	 *   .setPrettyPrinting()}
+	 *   .serializeSpecialFloatingPointValues()}
 	 * </pre>
 	 * 
 	 * @param builder the client or server builder
+	 * @throws NullPointerException if the client or server builder is null
 	 */
 	public final void inject(Builder<?> builder) {
 		inject(builder, defaultGsonBuilder());
@@ -78,6 +79,8 @@ public class GsonInjector extends Injector {
 	 * 
 	 * @param builder     the client or server builder
 	 * @param gsonBuilder the Gson builder
+	 * @throws NullPointerException if the client or server builder is null or the
+	 *                              Gson builder is null
 	 */
 	public final void inject(Builder<?> builder, GsonBuilder gsonBuilder) {
 		inject(builder, gsonBuilder.create());
@@ -89,14 +92,16 @@ public class GsonInjector extends Injector {
 	 * in the specified client or server builder.
 	 * </p>
 	 * <p>
-	 * This method instantiates a {@link GsonBuilder} with a default configuration
-	 * (see {@code inject(Builder<?>)}) and extends its type support with instances
-	 * of all concrete implementations of {@link GsonConverter} in the specified
+	 * This method uses a {@link GsonBuilder} with a default configuration (see
+	 * {@code inject(Builder<?>)}) and extends its type support with instances of
+	 * all concrete implementations of {@link GsonConverter} in the specified
 	 * package (including subpackages).
 	 * </p>
 	 * 
 	 * @param builder     the client or server builder
 	 * @param packageName the package name
+	 * @throws NullPointerException if the client or server builder is null or the
+	 *                              package name is null
 	 */
 	public final void inject(Builder<?> builder, String packageName) {
 		inject(builder, defaultGsonBuilder(), packageName);
@@ -115,18 +120,25 @@ public class GsonInjector extends Injector {
 	 * @param builder     the client or server builder
 	 * @param gsonBuilder the Gson builder
 	 * @param packageName the package name
+	 * @throws NullPointerException if the client or server builder is null, the
+	 *                              Gson builder is null, or the package name is
+	 *                              null
 	 */
 	public final void inject(Builder<?> builder, GsonBuilder gsonBuilder, String packageName) {
 		for (GsonConverter<?, ?> converter : getSubConverters(packageName, GsonConverter.class, LOOKUP)) {
-			Type type = converter.getSourceType();
-			gsonBuilder.registerTypeAdapter(type, converter.getGsonSerializer());
-			gsonBuilder.registerTypeAdapter(type, converter.getGsonDeserializer());
+			Type sourceType = converter.getSourceType();
+			Type targetType = converter.getTargetType();
+			gsonBuilder.registerTypeAdapter(sourceType, converter.getGsonSerializer(targetType));
+			gsonBuilder.registerTypeAdapter(sourceType, converter.getGsonDeserializer(targetType));
 			logger.info("Registered %s".formatted(converter.getClass().getName()));
 		}
-		inject(builder, gsonBuilder);
+		inject(builder, gsonBuilder.create());
 	}
 
 	private void inject(Builder<?> builder, Gson gson) {
+		if (builder == null) {
+			throw new NullPointerException("Builder cannot be null");
+		}
 		builder.withSerializer(JSON_TYPE, new GsonSerializer(gson));
 		builder.withDeserializer(JSON_TYPE, new GsonDeserializer(gson));
 	}
@@ -135,8 +147,8 @@ public class GsonInjector extends Injector {
 		return new GsonBuilder()
 				.disableJdkUnsafe()
 				.disableHtmlEscaping()
+				.setPrettyPrinting()
 				.serializeNulls()
-				.serializeSpecialFloatingPointValues()
-				.setPrettyPrinting();
+				.serializeSpecialFloatingPointValues();
 	}
 }
