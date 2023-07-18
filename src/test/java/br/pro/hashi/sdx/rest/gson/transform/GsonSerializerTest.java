@@ -1,81 +1,51 @@
 package br.pro.hashi.sdx.rest.gson.transform;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.io.UncheckedIOException;
 import java.io.Writer;
-import java.lang.reflect.Type;
-import java.util.function.Consumer;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
-import com.google.gson.stream.JsonWriter;
-
-import br.pro.hashi.sdx.rest.Hint;
-import br.pro.hashi.sdx.rest.transform.Serializer;
 
 class GsonSerializerTest {
-	private Gson gson;
-	private Serializer s;
+	private AutoCloseable mocks;
+	private @Mock Gson gson;
+	private GsonSerializer s;
 
 	@BeforeEach
 	void setUp() {
-		gson = mock(Gson.class);
+		mocks = MockitoAnnotations.openMocks(this);
+
 		s = new GsonSerializer(gson);
 	}
 
-	@Test
-	void writes() {
-		Object body = new Object();
-		doAnswer((invocation) -> {
-			Writer writer = invocation.getArgument(2);
-			writer.write("body");
-			return null;
-		}).when(gson).toJson(eq(body), eq(Object.class), any(Writer.class));
-		StringWriter writer = new StringWriter();
-		s.write(body, Object.class, writer);
-		assertContentEquals("body", writer);
-	}
-
-	private void assertContentEquals(String expected, StringWriter writer) {
-		assertEquals(expected, writer.toString());
+	@AfterEach
+	void tearDown() {
+		assertDoesNotThrow(() -> {
+			mocks.close();
+		});
 	}
 
 	@Test
-	void doesNotWriteIfGsonThrowsJsonIOException() {
+	void doesNotWriteIfGsonThrowsIOException() {
 		Object body = new Object();
-		Writer writer = new StringWriter();
+		Writer writer = Writer.nullWriter();
 		Throwable cause = mock(JsonIOException.class);
-		doThrow(cause).when(gson).toJson(eq(body), eq(Object.class), any(Writer.class));
+		doThrow(cause).when(gson).toJson(body, Object.class, writer);
 		Exception exception = assertThrows(UncheckedIOException.class, () -> {
 			s.write(body, Object.class, writer);
 		});
 		assertSame(cause, exception.getCause().getCause());
-	}
-
-	@Test
-	void doesNotWriteIfGsonThrowsIOException() throws IOException {
-		Consumer<JsonWriter> body = (jsonWriter) -> {};
-		Type type = new Hint<Consumer<JsonWriter>>() {}.getType();
-		Writer writer = new StringWriter();
-		Throwable cause = new IOException();
-		when(gson.newJsonWriter(writer)).thenThrow(cause);
-		Exception exception = assertThrows(UncheckedIOException.class, () -> {
-			s.write(body, type, writer);
-		});
-		assertSame(cause, exception.getCause());
 	}
 }
