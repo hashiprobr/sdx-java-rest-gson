@@ -31,7 +31,9 @@ public class GsonInjector extends Injector {
 	public static final String JSON_TYPE = "application/json";
 
 	/**
-	 * Obtains the injector instance.
+	 * Obtains an injector instance.
+	 * 
+	 * @return the instance
 	 */
 	public static GsonInjector getInstance() {
 		return INSTANCE;

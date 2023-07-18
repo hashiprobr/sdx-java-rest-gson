@@ -32,7 +32,7 @@ public interface GsonConverter<S, T> extends Converter<S, T> {
 	 * Classes are encouraged to provide an alternative implementation.
 	 * </p>
 	 * 
-	 * @param a {@link Type} representing {@code T}
+	 * @param targetType a {@link Type} representing {@code T}
 	 * @return the Gson serializer
 	 */
 	default JsonSerializer<S> getGsonSerializer(Type targetType) {
@@ -52,7 +52,7 @@ public interface GsonConverter<S, T> extends Converter<S, T> {
 	 * Classes are encouraged to provide an alternative implementation.
 	 * </p>
 	 * 
-	 * @param a {@link Type} representing {@code T}
+	 * @param targetType a {@link Type} representing {@code T}
 	 * @return the Gson deserializer
 	 */
 	default JsonDeserializer<S> getGsonDeserializer(Type targetType) {
