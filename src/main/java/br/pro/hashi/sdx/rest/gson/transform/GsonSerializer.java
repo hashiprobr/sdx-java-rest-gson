@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 import br.pro.hashi.sdx.rest.gson.constant.Types;
@@ -30,8 +31,10 @@ public class GsonSerializer implements Serializer {
 			if (body instanceof JsonReader) {
 				JsonReader jsonReader = (JsonReader) body;
 				JsonWriter jsonWriter = gson.newJsonWriter(writer);
-				while (jsonReader.hasNext()) {
-					switch (jsonReader.peek()) {
+				JsonToken token;
+				do {
+					token = jsonReader.peek();
+					switch (token) {
 					case NULL:
 						jsonReader.nextNull();
 						jsonWriter.nullValue();
@@ -71,10 +74,11 @@ public class GsonSerializer implements Serializer {
 						jsonReader.endObject();
 						jsonWriter.endObject();
 						break;
-					case END_DOCUMENT:
-						jsonReader.close();
+					default:
 					}
-				}
+				} while (token != JsonToken.END_DOCUMENT);
+				jsonReader.close();
+				jsonWriter.flush();
 				return;
 			}
 			if (Types.instanceOfWriterConsumer(body, type)) {

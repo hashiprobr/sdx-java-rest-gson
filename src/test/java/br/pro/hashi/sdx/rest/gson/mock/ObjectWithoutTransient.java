@@ -1,13 +1,16 @@
 package br.pro.hashi.sdx.rest.gson.mock;
 
 public class ObjectWithoutTransient {
-	private boolean field;
+	private boolean value;
 
-	public ObjectWithoutTransient() {
-		this.field = true;
+	ObjectWithoutTransient() {
 	}
 
-	public void printField() {
-		System.out.println(field);
+	public ObjectWithoutTransient(boolean value) {
+		this.value = value;
+	}
+
+	public boolean isValue() {
+		return value;
 	}
 }
