@@ -86,7 +86,6 @@
         <version>3.1.2</version>
         <configuration>
           <argLine>
-            --add-opens br.pro.hashi.sdx.rest.gson/br.pro.hashi.sdx.rest.gson.mock=br.pro.hashi.sdx.rest
             --add-opens br.pro.hashi.sdx.rest.gson/br.pro.hashi.sdx.rest.gson.mock=com.google.gson
           </argLine>
         </configuration>
