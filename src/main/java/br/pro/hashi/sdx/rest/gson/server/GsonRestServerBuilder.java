@@ -31,7 +31,7 @@ public class GsonRestServerBuilder extends RestServerBuilder {
 	 * <p>
 	 * See {@link GsonInjector#inject(br.pro.hashi.sdx.rest.Builder, GsonBuilder)}.
 	 * </p>
-	 * 
+	 *
 	 * @param gsonBuilder the Gson builder
 	 * @throws NullPointerException if the Gson builder is null
 	 */
@@ -48,7 +48,7 @@ public class GsonRestServerBuilder extends RestServerBuilder {
 	 * <p>
 	 * See {@link GsonInjector#inject(br.pro.hashi.sdx.rest.Builder, String)}.
 	 * </p>
-	 * 
+	 *
 	 * @param packageName the package name
 	 * @throws NullPointerException if the package name is null
 	 */
@@ -66,7 +66,7 @@ public class GsonRestServerBuilder extends RestServerBuilder {
 	 * See
 	 * {@link GsonInjector#inject(br.pro.hashi.sdx.rest.Builder, GsonBuilder, String)}.
 	 * </p>
-	 * 
+	 *
 	 * @param gsonBuilder the Gson builder
 	 * @param packageName the package name
 	 * @throws NullPointerException if the Gson builder is null or package name is

@@ -32,7 +32,7 @@ public class GsonInjector extends Injector {
 
 	/**
 	 * Obtains an injector instance.
-	 * 
+	 *
 	 * @return the instance
 	 */
 	public static GsonInjector getInstance() {
@@ -54,7 +54,7 @@ public class GsonInjector extends Injector {
 	 * This method uses a {@link GsonBuilder} with a default configuration. Namely,
 	 * with the options below.
 	 * </p>
-	 * 
+	 *
 	 * <pre>
 	 * {@code   .disableJdkUnsafe()
 	 *   .disableHtmlEscaping()
@@ -62,7 +62,7 @@ public class GsonInjector extends Injector {
 	 *   .serializeNulls()
 	 *   .serializeSpecialFloatingPointValues()}
 	 * </pre>
-	 * 
+	 *
 	 * @param builder the client or server builder
 	 * @throws NullPointerException if the client or server builder is null
 	 */
@@ -78,7 +78,7 @@ public class GsonInjector extends Injector {
 	 * <p>
 	 * This method uses the specified {@link GsonBuilder}.
 	 * </p>
-	 * 
+	 *
 	 * @param builder     the client or server builder
 	 * @param gsonBuilder the Gson builder
 	 * @throws NullPointerException if the client or server builder is null or the
@@ -99,7 +99,7 @@ public class GsonInjector extends Injector {
 	 * all concrete implementations of {@link GsonConverter} in the specified
 	 * package (including subpackages).
 	 * </p>
-	 * 
+	 *
 	 * @param builder     the client or server builder
 	 * @param packageName the package name
 	 * @throws NullPointerException if the client or server builder is null or the
@@ -118,7 +118,7 @@ public class GsonInjector extends Injector {
 	 * This method uses the specified {@link GsonBuilder} and extends its type
 	 * support (see {@code inject(Builder<?>, String)}).
 	 * </p>
-	 * 
+	 *
 	 * @param builder     the client or server builder
 	 * @param gsonBuilder the Gson builder
 	 * @param packageName the package name
